@@ -13,7 +13,7 @@
 <br>
 
 <p align="center">
-  <img alt="projetos" src="./img/TelaDeCadastro.png" width="100%">
+  <img alt="projetos" src="./img/TelaCadastro.png" width="100%">
 </p>
 
 
