@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <title>Cadastro de lista</title>
+</head>
+<style>
+    * {
+        font-size: 18px;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-image: url(img/fundoimg.jpg);
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-size: cover;
+        
+        height: 86vh;
+    }
+
+
+    #padrao {
+        position: initial;
+        top: -50%;
+        margin-top: 200px;
+        margin-left: 400px;
+    }
+
+    h3 {
+    margin-left: 70px;
+    }
+
+    .table {
+        width: 80%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+        display: table;
+        text-align: center;
+        margin-left: -150px;
+}
+
+
+    .form h3 {
+        margin-left: 70px;
+    }
+
+    .form {
+        position: absolute;
+        color: white;
+        left: 34%;
+        top: 60%;
+    }
+
+    .form input {
+        width: 100%;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    
+</style>
+
+<body>
+    <div id="padrao">
+        <h3>Lista de Cadastro</h3>
+        <table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Matrícula</th>
+                <th scope="col">Turma</th>
+                <th scope="col">Opções</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+          </table>
+
+        <form class="form">
+            <h3>Cadastro</h3>
+            <label for="text">Nome:</label>
+            <input type="text" id="nome" placeholder="Digite o seu nome"><br>
+            <label for="matricula">Matrícula:</label>
+            <input type="number" id="matricula" placeholder="Digite a sua matricula"><br>
+            <label for="turma">Turma:</label>
+            <input type="text" id="turma" placeholder="Digite a turma"><br>
+
+            <button type="button" class="btn btn-outline-info" onclick="cadastrar()">Cadastrar</button>
+            <button type="button" class="btn btn-outline-success"onclick="salvarEdicao()">Salvar Edição</button>
+            
+        </form>
+    </div>
+
+    <script>
+        
+        let dados = [
+            { id: 1, nome: "Reidson", matricula: 123456, turma: "Code Innovators" },
+        ];
+
+        let itemEditando = null;
+
+        listarDados();
+
+        function cadastrar() {
+            let nome = document.getElementById("nome").value;
+            let matricula = document.getElementById("matricula").value;
+            let turma = document.getElementById("turma").value;
+
+            let novoId = dados.length + 1;
+            dados.push({ id: novoId, nome, matricula, turma });
+
+            dados.sort((a, b) => a.id - b.id); 
+
+            document.getElementById("nome").value = "nome";
+            document.getElementById("matricula").value = "matricula";
+            document.getElementById("turma").value = "turma";
+
+            listarDados();
+        }
+
+        
+
+        function listarDados() {
+            let tbody = document.getElementById("tbody");
+            tbody.innerHTML = "";
+
+            dados.forEach((item) => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.nome}</td>
+                <td>${item.matricula}</td>
+                <td>${item.turma}</td>
+                <td>
+                    <button type="button" class="btn  btn-outline-primary" onclick="editar(${item.id})">EDITAR</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="excluir(${item.id})">DELETAR</button>
+                </td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editar(id) {
+            itemEditando = dados.find((item) => item.id === id);
+            if (itemEditando) {
+                document.getElementById("nome").value = itemEditando.nome;
+                document.getElementById("matricula").value = itemEditando.matricula;
+                document.getElementById("turma").value = itemEditando.turma;
+            }
+        }
+
+        function salvarEdicao() {
+            if (itemEditando) {
+                itemEditando.nome = document.getElementById("nome").value;
+                itemEditando.matricula = document.getElementById("matricula").value;
+                itemEditando.turma = document.getElementById("turma").value;
+
+                itemEditando = null;
+
+                document.getElementById("nome").value = "";
+                document.getElementById("matricula").value = "";
+                document.getElementById("turma").value = "";
+
+                listarDados();
+            }
+        }
+
+        function excluir(id) {
+  let index = dados.findIndex((item) => item.id === id);
+  if (index!== -1) {
+    dados.splice(index, 1);
+    for (let i = index; i < dados.length; i++) {
+      dados[i].id = i + 1;
+    }
+    listarDados();
+  }
+}
+    </script>
+
+</body>
+
+</html>
